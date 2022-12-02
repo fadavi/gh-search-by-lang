@@ -5,7 +5,7 @@ WORKDIR /usr/src
 COPY package*.json ./
 COPY tsconfig.json ./
 COPY src ./src
-RUN npm i
+RUN npm ci
 RUN npm run build
 
 FROM node:$NODE_VERSION
