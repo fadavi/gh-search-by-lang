@@ -1,12 +1,14 @@
-import { expect } from 'chai'
-import { prepareResponse, prepareSearchOptions } from './filter-users'
-import * as githubSearch from '../lib/github/search-users'
+import type { FastifyReply, FastifyRequest } from 'fastify'
+import type { GraphQLError, GraphQLRequestContext } from 'graphql-request/dist/types'
 import type { SearchUsersOptions, SearchUsersResponse } from '../lib/github/search-users'
-import * as sinon from 'sinon'
-import { app } from '../app'
+import { expect, assert } from 'chai'
 import { ClientError } from 'graphql-request'
-import { GraphQLRequestContext } from 'graphql-request/dist/types'
-
+import * as sinon from 'sinon'
+import { handleApiError, prepareResponse, prepareSearchOptions } from './filter-users'
+import * as githubSearch from '../lib/github/search-users'
+import * as githubErrors from '../lib/github/errors'
+import * as sanitize from '../lib/sanitize'
+import { app } from '../app'
 
 describe('handlers/filter-users', () => {
   context('prepareResponse', () => {
@@ -36,6 +38,9 @@ describe('handlers/filter-users', () => {
   })
 
   context('prepareSearchOptions', () => {
+    beforeEach(() => sinon.stub(sanitize, 'buildLanguagesQuery').returns('fake'))
+    afterEach(() => sinon.restore())
+
     it('sets last and before when before is truthy', () => {
       const opts = prepareSearchOptions({
         langs: 'c',
@@ -44,7 +49,7 @@ describe('handlers/filter-users', () => {
       })
 
       expect(opts).to.be.eql({
-        query: 'language:c',
+        query: 'fake',
         last: 123,
         before: 'cursor',
       })
@@ -58,7 +63,7 @@ describe('handlers/filter-users', () => {
       })
 
       expect(opts).to.be.eql({
-        query: 'language:c',
+        query: 'fake',
         first: 123,
         after: 'cursor',
       })
@@ -71,9 +76,84 @@ describe('handlers/filter-users', () => {
       })
 
       expect(opts).to.be.eql({
-        query: 'language:c',
+        query: 'fake',
         first: 123,
       })
+    })
+  })
+
+  context('handleApiError', () => {
+    let isClientErrorStub: sinon.SinonStub<
+      [err: unknown], boolean>
+    let isInvalidCursorArgumentsStub: sinon.SinonStub<
+      [err: ClientError], boolean>
+
+    const request = {
+      log: {
+        error: sinon.stub(),
+      },
+    }
+
+    const reply = {
+      code: sinon.stub(),
+      header: sinon.stub(),
+      send: sinon.stub(),
+    }
+
+    beforeEach(() => {
+      isClientErrorStub = sinon
+        .stub(githubErrors, 'isClientError')
+        .throws()
+
+      isInvalidCursorArgumentsStub = sinon
+        .stub(githubErrors, 'isInvalidCursorArguments')
+        .throws()
+    })
+
+    afterEach(() => {
+      sinon.restore()
+      request.log.error.reset()
+      reply.header.reset()
+      reply.code.reset()
+      reply.send.reset()
+    })
+
+    it('replies with 400 in case of invalid pagination cursor', () => {
+      const err = new Error('a fake error')
+
+      isClientErrorStub.withArgs(err).returns(true)
+      isInvalidCursorArgumentsStub.withArgs(err as ClientError).returns(true)
+
+      // @ts-expect-error-next-line
+      handleApiError(request as FastifyRequest, reply as FastifyReply, err)
+
+      assert(reply.code.calledOnceWithExactly(400))
+      assert(reply.send.calledOnce)
+    })
+
+    it('replies with 503 in case of unhaneled client error', () => {
+      const err = new Error('a fake error')
+
+      isClientErrorStub.withArgs(err).returns(true)
+      isInvalidCursorArgumentsStub.withArgs(err as ClientError).returns(false)
+
+      // @ts-expect-error-next-line
+      handleApiError(request as FastifyRequest, reply as FastifyReply, err)
+
+      assert(reply.code.calledOnceWithExactly(503))
+      assert(reply.send.calledOnce)
+    })
+
+    it('replies with 500 in case of unknown error', () => {
+      const err = new Error('a fake error')
+
+      isClientErrorStub.withArgs(err).returns(false)
+
+      // @ts-expect-error-next-line
+      handleApiError(request as FastifyRequest, reply as FastifyReply, err)
+
+      assert(reply.code.notCalled)
+      assert(reply.send.calledOnce)
     })
   })
 })
@@ -144,10 +224,12 @@ describe('endpoints', () => {
 
     context('when github API fails', () => {
       it('responds with 400 in case of invalid pagination cursor', async () => {
+        // @ts-expect-error-next-line
+        const subError = { type: 'INVALID_CURSOR_ARGUMENTS' } as GraphQLError
         const clientError = new ClientError(
           {
-            errors: [{ type: 'INVALID_CURSOR_ARGUMENTS' }],
-            status: null,
+            errors: [subError],
+            status: 1234,
           },
           {} as GraphQLRequestContext,
         )
