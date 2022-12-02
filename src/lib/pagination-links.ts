@@ -1,5 +1,4 @@
-import type { FastifyRequest } from 'fastify'
-import type { PageInfo } from './github-api/types'
+import type { PageInfo } from './github/types'
 
 export interface RequestLike {
   protocol?: string

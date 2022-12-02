@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import type { SearchUsersOptions, SearchUsersResponse } from '../lib/github-api/search-users'
-import { isClientError, isInvalidCursorArguments } from '../lib/github-api/errors'
-import { searchUsers } from '../lib/github-api/search-users'
+import type { SearchUsersOptions, SearchUsersResponse } from '../lib/github/search-users'
+import { isClientError, isInvalidCursorArguments } from '../lib/github/errors'
+import { searchUsers } from '../lib/github/search-users'
 import { createPaginationLinks } from '../lib/pagination-links'
 import { buildLanguagesQuery } from '../lib/sanitize'
 

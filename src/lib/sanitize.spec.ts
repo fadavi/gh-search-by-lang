@@ -34,7 +34,7 @@ describe('lib/sanitize', () => {
         ' S\tQ\tL ',
         'language:C++',
         '-c#',
-        'c--',
+        'c--'
       ])
 
       expect(query).to.be.equal([
@@ -42,7 +42,7 @@ describe('lib/sanitize', () => {
         'language:SQL',
         'language:languageC++',
         '-language:c#',
-        'language:c--',
+        'language:c--'
       ].join(' '))
     })
   })

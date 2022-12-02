@@ -1,5 +1,5 @@
-import { expect } from "chai"
-import { prepareResponse, prepareSearchOptions } from "./filter-users"
+import { expect } from 'chai'
+import { prepareResponse, prepareSearchOptions } from './filter-users'
 
 describe('handlers/filter-users', () => {
   context('prepareResponse', () => {
@@ -10,7 +10,7 @@ describe('handlers/filter-users', () => {
             node: {}
           }],
           pageInfo: {},
-          totalCount: 1234,
+          totalCount: 1234
         }
       }
 
@@ -23,7 +23,7 @@ describe('handlers/filter-users', () => {
         username: null,
         name: null,
         avatarUrl: null,
-        followersCount: 0,
+        followersCount: 0
       })
     })
   })
@@ -33,13 +33,13 @@ describe('handlers/filter-users', () => {
       const opts = prepareSearchOptions({
         langs: 'c',
         limit: 123,
-        before: 'cursor',
+        before: 'cursor'
       })
 
       expect(opts).to.be.eql({
         query: 'language:c',
         last: 123,
-        before: 'cursor',
+        before: 'cursor'
       })
     })
 
@@ -47,25 +47,25 @@ describe('handlers/filter-users', () => {
       const opts = prepareSearchOptions({
         langs: 'c',
         limit: 123,
-        after: 'cursor',
+        after: 'cursor'
       })
 
       expect(opts).to.be.eql({
         query: 'language:c',
         first: 123,
-        after: 'cursor',
+        after: 'cursor'
       })
     })
 
     it('sets first when before and after are falsey', () => {
       const opts = prepareSearchOptions({
         langs: 'c',
-        limit: 123,
+        limit: 123
       })
 
       expect(opts).to.be.eql({
         query: 'language:c',
-        first: 123,
+        first: 123
       })
     })
   })
@@ -73,5 +73,6 @@ describe('handlers/filter-users', () => {
 
 describe('endpoints', () => {
   context('GET /users', () => {
+    // WIP
   })
 })
