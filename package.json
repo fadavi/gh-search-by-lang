@@ -1,0 +1,48 @@
+{
+  "name": "gh-users-by-lang",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "ts-mocha ./src/**/*.spec.ts",
+    "repl": "npx ts-node",
+    "lint": "eslint . --ext .ts",
+    "format": "eslint . --ext .ts --fix",
+    "dev": "cross-env NODE_ENV=development nodemon",
+    "debug": "nodemon --config nodemon-debug.json",
+    "start": "tsc && cross-env NODE_ENV=development node dist/server",
+    "build": "tsc",
+    "clean": "rimraf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fadavi/gh-users-by-lang.git"
+  },
+  "author": "Mohamad Fadavi <fadavimohamad@gmail.com>",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/fadavi/gh-users-by-lang/issues"
+  },
+  "homepage": "https://github.com/fadavi/gh-users-by-lang#readme",
+  "dependencies": {
+    "fastify": "^4.10.2",
+    "graphql-request": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "@types/sinon": "^10.0.13",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "chai": "^4.3.7",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.28.0",
+    "mocha": "^10.1.0",
+    "nodemon": "^2.0.20",
+    "rimraf": "^3.0.2",
+    "sinon": "^15.0.0",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.1"
+  }
+}
