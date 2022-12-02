@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import type { SearchUsersOptions, SearchUsersResponse } from '../lib/github/search-users'
 import { isClientError, isInvalidCursorArguments } from '../lib/github/errors'
-import * as github from '../lib/github'
+import { searchUsers } from '../lib/github/search-users'
 import { createPaginationLinks } from '../lib/pagination-links'
 import { buildLanguagesQuery } from '../lib/sanitize'
 
@@ -80,7 +80,7 @@ export async function filterUsers(
   let data: SearchUsersResponse
 
   try {
-    data = await github.searchUsers(opts)
+    data = await searchUsers(opts)
   } catch (err) {
     return handleApiError(request, reply, err)
   }
