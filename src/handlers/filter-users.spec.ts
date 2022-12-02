@@ -14,11 +14,11 @@ describe('handlers/filter-users', () => {
       const data = {
         search: {
           edges: [{
-            node: {}
+            node: {},
           }],
           pageInfo: {},
-          totalCount: 1234
-        }
+          totalCount: 1234,
+        },
       }
 
       const { users, pageInfo, totalCount } = prepareResponse(data)
@@ -30,7 +30,7 @@ describe('handlers/filter-users', () => {
         username: null,
         name: null,
         avatarUrl: null,
-        followersCount: 0
+        followersCount: 0,
       })
     })
   })
@@ -40,13 +40,13 @@ describe('handlers/filter-users', () => {
       const opts = prepareSearchOptions({
         langs: 'c',
         limit: 123,
-        before: 'cursor'
+        before: 'cursor',
       })
 
       expect(opts).to.be.eql({
         query: 'language:c',
         last: 123,
-        before: 'cursor'
+        before: 'cursor',
       })
     })
 
@@ -54,25 +54,25 @@ describe('handlers/filter-users', () => {
       const opts = prepareSearchOptions({
         langs: 'c',
         limit: 123,
-        after: 'cursor'
+        after: 'cursor',
       })
 
       expect(opts).to.be.eql({
         query: 'language:c',
         first: 123,
-        after: 'cursor'
+        after: 'cursor',
       })
     })
 
     it('sets first when before and after are falsey', () => {
       const opts = prepareSearchOptions({
         langs: 'c',
-        limit: 123
+        limit: 123,
       })
 
       expect(opts).to.be.eql({
         query: 'language:c',
-        first: 123
+        first: 123,
       })
     })
   })
@@ -87,7 +87,7 @@ describe('endpoints', () => {
     return app.inject({
       method: 'GET',
       url: '/users',
-      query
+      query,
     })
   }
 
@@ -105,30 +105,30 @@ describe('endpoints', () => {
     it('responds with 400 in case of invalid query params', async () => {
       const validQuery = Object.freeze({
         langs: 'java,c++',
-        limit: '20'
+        limit: '20',
       })
 
       let res = await getUsers({
         ...validQuery,
-        langs: ''
+        langs: '',
       })
       expect(res.statusCode).to.be.equal(400)
 
       res = await getUsers({
         ...validQuery,
-        limit: '-1'
+        limit: '-1',
       })
       expect(res.statusCode).to.be.equal(400)
 
       res = await getUsers({
         ...validQuery,
-        before: ''
+        before: '',
       })
       expect(res.statusCode).to.be.equal(400)
 
       res = await getUsers({
         ...validQuery,
-        after: ''
+        after: '',
       })
       expect(res.statusCode).to.be.equal(400)
     })
@@ -137,7 +137,7 @@ describe('endpoints', () => {
       const res = await getUsers({
         langs: 'c',
         before: 'cursor1',
-        after: 'cursor2'
+        after: 'cursor2',
       })
       expect(res.statusCode).to.be.equal(409)
     })
@@ -147,9 +147,9 @@ describe('endpoints', () => {
         const clientError = new ClientError(
           {
             errors: [{ type: 'INVALID_CURSOR_ARGUMENTS' }],
-            status: null
+            status: null,
           },
-          {} as GraphQLRequestContext
+          {} as GraphQLRequestContext,
         )
         searchUsersStub.rejects(clientError)
 
@@ -172,7 +172,7 @@ describe('endpoints', () => {
       it('responds with 503 in case of unhandled client error', async () => {
         const err = new ClientError(
           { status: 200, errors: [] },
-          {} as GraphQLRequestContext
+          {} as GraphQLRequestContext,
         )
         searchUsersStub.rejects(err)
 
@@ -189,9 +189,9 @@ describe('endpoints', () => {
           edges: [],
           pageInfo: {
             hasNextPage: true,
-            endCursor: 'endcursor'
-          }
-        }
+            endCursor: 'endcursor',
+          },
+        },
       })
 
       const res = await getUsers({ langs: 'c' })
@@ -209,9 +209,9 @@ describe('endpoints', () => {
           edges: [],
           pageInfo: {
             hasPreviousPage: true,
-            startCursor: 'startcursor'
-          }
-        }
+            startCursor: 'startcursor',
+          },
+        },
       })
 
       const res = await getUsers({ langs: 'c' })
@@ -231,9 +231,9 @@ describe('endpoints', () => {
             hasNextPage: true,
             endCursor: 'endcursor',
             hasPreviousPage: true,
-            startCursor: 'startcursor'
-          }
-        }
+            startCursor: 'startcursor',
+          },
+        },
       })
 
       const res = await getUsers({ langs: 'c' })
@@ -252,16 +252,16 @@ describe('endpoints', () => {
         username: 'john',
         name: 'John Smith',
         followers: Object.freeze({
-          count: 10
-        })
+          count: 10,
+        }),
       })
 
       searchUsersStub.resolves({
         search: {
           totalCount: 1234,
           edges: [{ node: john }, { node: {} }],
-          pageInfo: {}
-        }
+          pageInfo: {},
+        },
       })
 
       const res = await getUsers({ langs: 'c' })
@@ -274,12 +274,12 @@ describe('endpoints', () => {
           username: john.username,
           name: john.name,
           avatarUrl: null,
-          followersCount: john.followers.count
+          followersCount: john.followers.count,
         }, {
           username: null,
           name: null,
           avatarUrl: null,
-          followersCount: 0
+          followersCount: 0,
         }])
     })
   })

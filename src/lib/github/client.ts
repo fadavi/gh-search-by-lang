@@ -14,8 +14,8 @@ export function createClient() {
 
   return new GraphQLClient(GITHUB_GRAPHQL_ENDPOINT, {
     headers: {
-      Authorization: `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   })
 }
 

@@ -65,6 +65,6 @@ const SEARCH_USERS = gql`
 export async function searchUsers(opts: SearchUsersOptions) {
   return getClient().request<SearchUsersResponse, SearchUsersOptions>(
     SEARCH_USERS,
-    opts
+    opts,
   )
 }

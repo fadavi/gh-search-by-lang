@@ -11,7 +11,7 @@ export function hasType(err: unknown): err is { type: unknown } {
 export function isInvalidCursorArguments(err: ClientError) {
   const subErrors = err.response.errors ?? []
   const matches = subErrors.some(
-    e => hasType(e) && e.type === 'INVALID_CURSOR_ARGUMENTS'
+    e => hasType(e) && e.type === 'INVALID_CURSOR_ARGUMENTS',
   )
 
   return Boolean(matches)

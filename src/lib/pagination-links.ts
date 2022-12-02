@@ -13,7 +13,7 @@ export interface PaginationLinks {
 
 export function createUrlByRequest(
   request: RequestLike,
-  params: Record<string, string | null> = {}
+  params: Record<string, string | null> = {},
 ) {
   const protocol = request.protocol ?? 'http'
   const hostname = request.hostname ?? '.'
@@ -37,21 +37,21 @@ export function createUrlByRequest(
 
 export function createPaginationLinks(
   request: RequestLike,
-  pageInfo: PageInfo
+  pageInfo: PageInfo,
 ) {
   const links: PaginationLinks = {}
 
   if (pageInfo.hasNextPage && pageInfo.endCursor) {
     links.next = createUrlByRequest(request, {
       before: null,
-      after: pageInfo.endCursor
+      after: pageInfo.endCursor,
     })
   }
 
   if (pageInfo.hasPreviousPage && pageInfo.startCursor) {
     links.prev = createUrlByRequest(request, {
       before: pageInfo.startCursor,
-      after: null
+      after: null,
     })
   }
 

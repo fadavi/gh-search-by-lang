@@ -6,7 +6,7 @@ describe('lib/pagination-links', () => {
     it('uses http as default protocol', () => {
       const url = createUrlByRequest({
         hostname: 'foo',
-        url: '/bar'
+        url: '/bar',
       })
 
       expect(url).to.be.equal('http://foo/bar')
@@ -15,9 +15,9 @@ describe('lib/pagination-links', () => {
     it('returns relative url when hostname is falsey', () => {
       const url = createUrlByRequest({
         protocol: 'http',
-        url: '/foo'
+        url: '/foo',
       }, {
-        bar: 'baz'
+        bar: 'baz',
       })
 
       expect(url).to.be.equal('/foo?bar=baz')
@@ -27,10 +27,10 @@ describe('lib/pagination-links', () => {
       const url = createUrlByRequest({
         protocol: 'http',
         hostname: 'foo',
-        url: '/bar?baz=qux'
+        url: '/bar?baz=qux',
       }, {
         baz: null,
-        qux: null
+        qux: null,
       })
 
       expect(url).to.be.equal('http://foo/bar')
@@ -40,10 +40,10 @@ describe('lib/pagination-links', () => {
       const url = createUrlByRequest({
         protocol: 'http',
         hostname: 'foo',
-        url: '/bar?param1=value1'
+        url: '/bar?param1=value1',
       }, {
         param1: 'value2',
-        param2: 'value3'
+        param2: 'value3',
       })
 
       expect(url).to.be.equal('http://foo/bar?param1=value2&param2=value3')
@@ -54,7 +54,7 @@ describe('lib/pagination-links', () => {
     it('sets link to next page when there are more pages', () => {
       const links = createPaginationLinks({}, {
         hasNextPage: true,
-        endCursor: 'thecursor'
+        endCursor: 'thecursor',
       })
 
       expect(links).to.be.eql({ next: '/?after=thecursor' })
@@ -63,7 +63,7 @@ describe('lib/pagination-links', () => {
     it('sets link to prev page when there are prevsious pages', () => {
       const links = createPaginationLinks({}, {
         hasPreviousPage: true,
-        startCursor: 'thecursor'
+        startCursor: 'thecursor',
       })
 
       expect(links).to.be.eql({ prev: '/?before=thecursor' })

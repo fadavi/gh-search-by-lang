@@ -14,28 +14,28 @@ export async function router(fastify: FastifyInstance) {
               type: 'string',
               minLength: 1,
               maxLength: 128,
-              pattern: '^\\s*,*[\\w#+/?!\\.\\\\-]+(?:\\s*,+\\s*[\\w#+/?!\\.\\\\-]+)*\\s*$'
+              pattern: '^\\s*,*[\\w#+/?!\\.\\\\-]+(?:\\s*,+\\s*[\\w#+/?!\\.\\\\-]+)*\\s*$',
             },
             limit: {
               type: 'integer',
               minimum: 1,
               maximum: 100,
-              default: 20
+              default: 20,
             },
             before: {
               type: 'string',
               minLength: 1,
-              maxLength: 64
+              maxLength: 64,
             },
             after: {
               type: 'string',
               minLength: 1,
-              maxLength: 64
-            }
-          }
-        }
-      }
+              maxLength: 64,
+            },
+          },
+        },
+      },
     },
-    filterUsers
+    filterUsers,
   )
 }

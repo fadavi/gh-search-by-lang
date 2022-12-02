@@ -6,10 +6,10 @@ import { createPaginationLinks } from '../lib/pagination-links'
 import { buildLanguagesQuery } from '../lib/sanitize'
 
 export interface FilterUsersQuery {
-  langs: string;
-  limit: number;
-  before?: string;
-  after?: string;
+  langs: string
+  limit: number
+  before?: string
+  after?: string
 }
 
 export function prepareResponse(data: SearchUsersResponse) {
@@ -17,20 +17,20 @@ export function prepareResponse(data: SearchUsersResponse) {
     username: u.username ?? null,
     name: u.name ?? null,
     avatarUrl: u.avatarUrl ?? null,
-    followersCount: u.followers?.count ?? 0
+    followersCount: u.followers?.count ?? 0,
   }))
 
   return {
     users,
     pageInfo: data.search.pageInfo,
-    totalCount: data.search.totalCount
+    totalCount: data.search.totalCount,
   }
 }
 
 export function prepareSearchOptions(query: FilterUsersQuery) {
   const langs = query.langs.split(',')
   const opts: SearchUsersOptions = {
-    query: buildLanguagesQuery(langs)
+    query: buildLanguagesQuery(langs),
   }
 
   if (query.before) {
@@ -49,7 +49,7 @@ export function prepareSearchOptions(query: FilterUsersQuery) {
 export function handleApiError(
   request: FastifyRequest,
   reply: FastifyReply,
-  err: unknown
+  err: unknown,
 ): void {
   let replyErr: Error = new Error()
 
@@ -68,11 +68,11 @@ export function handleApiError(
 
 export async function filterUsers(
   request: FastifyRequest<{ Querystring: FilterUsersQuery }>,
-  reply: FastifyReply
+  reply: FastifyReply,
 ): Promise<void> {
   if (request.query.before && request.query.after) {
     return reply.code(409).send(
-      new TypeError('`bafore` and `after` are incompatible')
+      new TypeError('`bafore` and `after` are incompatible'),
     )
   }
 
