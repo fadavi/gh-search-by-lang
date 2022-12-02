@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import { prepareResponse, prepareSearchOptions } from './filter-users'
+import { app } from '../app'
 
 describe('handlers/filter-users', () => {
   context('prepareResponse', () => {
@@ -72,7 +73,53 @@ describe('handlers/filter-users', () => {
 })
 
 describe('endpoints', () => {
+  async function getUsers (query: Record<string, string | string[]> = {}) {
+    return app.inject({
+      method: 'GET',
+      url: '/users',
+      query
+    })
+  }
+
   context('GET /users', () => {
-    // WIP
+    it('responds with 400 in case of invalid query params', async () => {
+      const validQuery = Object.freeze({
+        langs: 'java,c++',
+        limit: '20'
+      })
+
+      let res = await getUsers({
+        ...validQuery,
+        langs: ''
+      })
+      expect(res.statusCode).to.be.equal(400)
+
+      res = await getUsers({
+        ...validQuery,
+        limit: '-1'
+      })
+      expect(res.statusCode).to.be.equal(400)
+
+      res = await getUsers({
+        ...validQuery,
+        before: ''
+      })
+      expect(res.statusCode).to.be.equal(400)
+
+      res = await getUsers({
+        ...validQuery,
+        after: ''
+      })
+      expect(res.statusCode).to.be.equal(400)
+    })
+
+    it('responds with 409 when both cursors are specified', async () => {
+      const res = await getUsers({
+        langs: 'c',
+        before: 'cursor1',
+        after: 'cursor2'
+      })
+      expect(res.statusCode).to.be.equal(409)
+    })
   })
 })
