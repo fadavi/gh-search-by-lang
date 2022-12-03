@@ -12,7 +12,8 @@
     "debug": "nodemon --config nodemon-debug.json",
     "start": "tsc && cross-env NODE_ENV=development node dist/server",
     "build": "tsc",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "coverage": "nyc npm run test"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "eslint": "^8.28.0",
     "mocha": "^10.1.0",
     "nodemon": "^2.0.20",
+    "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
     "sinon": "^15.0.0",
     "ts-mocha": "^10.0.0",
