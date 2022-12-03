@@ -10,6 +10,6 @@ if (require.main === module) {
       return process.exit(1)
     }
 
-    console.log(`Listening on port ${url}`)
+    console.log(`Listening on ${url}`)
   })
 }
