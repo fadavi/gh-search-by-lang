@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "test": "ts-mocha ./src/**/*.spec.ts",
+    "test": "ts-mocha './src/**/*.spec.ts'",
     "repl": "npx ts-node",
     "lint": "eslint . --ext .ts",
     "format": "eslint . --ext .ts --fix",
