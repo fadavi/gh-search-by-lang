@@ -17,7 +17,7 @@ ARG GITHUB_TOKEN
 WORKDIR /usr/app
 COPY --from=builder /usr/src/package*.json ./
 COPY --from=builder /usr/src/dist ./dist
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 ENV PORT=$PORT
 ENV HOST=$HOST
