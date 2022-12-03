@@ -1,8 +1,8 @@
+import type { GraphQLClient } from 'graphql-request'
 import * as sinon from 'sinon'
 import * as githubSearch from './search-users'
 import * as githubClient from './client'
 import { expect } from 'chai'
-import { GraphQLClient } from 'graphql-request'
 
 describe('lib/github/search-users', () => {
   context('searchUsers', () => {
